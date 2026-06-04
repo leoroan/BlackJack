@@ -1,4 +1,38 @@
 /* =========================================================
+   10. ESTILOS DINÁMICOS PARA MENSAJES DE RESULTADO
+========================================================= */
+
+/* Transición suave cuando cambia el texto y el color */
+#resultado {
+  transition: all 0.3s ease;
+}
+
+/* Victoria / Blackjack */
+.mensaje-ganar {
+  color: #4caf50 !important;
+  text-shadow: 0 0 15px rgba(76, 175, 80, 0.6), 0 0 30px rgba(76, 175, 80, 0.4) !important;
+  animation: latido-victoria 0.8s ease-in-out infinite alternate;
+}
+
+/* Derrota */
+.mensaje-perder {
+  color: #f44336 !important;
+  text-shadow: 0 0 15px rgba(244, 67, 54, 0.6), 0 0 30px rgba(244, 67, 54, 0.4) !important;
+}
+
+/* Empate */
+.mensaje-empate {
+  color: #9e9e9e !important;
+  text-shadow: 0 0 15px rgba(158, 158, 158, 0.6) !important;
+}
+
+/* Animación exclusiva para cuando ganás */
+@keyframes latido-victoria {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+/* =========================================================
    1. FUENTES Y RESET DE PANTALLA
 ========================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
