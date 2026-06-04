@@ -9,192 +9,219 @@
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   
-  <link rel="stylesheet" href="styles.css">
-  
   <style>
-    /* FONDO: Simulando la textura de una mesa de casino bajo un reflector */
+    /* RESET Y PANTALLA COMPLETA (Sin scroll) */
     body {
-      background: radial-gradient(circle at center top, #115930 0%, #05180c 100%);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden; /* Evita cualquier scroll */
+      background: #0f0f0f;
       font-family: 'Montserrat', sans-serif;
-      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    /* MESA CENTRAL: Estilo de tapete VIP con bordes dorados */
-    .mesa-card {
-      background: rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(12px);
-      border-radius: 2.5rem;
-      border: 1px solid #d4af37; /* Dorado clásico */
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(212, 175, 55, 0.1);
+    /* LA MESA DE CASINO (Ocupa todo el espacio lateral posible) */
+    .mesa-casino {
+      width: 96vw;
+      max-width: 1400px; /* Se expande bien a los costados */
+      height: 88vh; /* Deja un pequeño margen arriba y abajo */
+      background: radial-gradient(circle at center, #1b6b3b 0%, #0a361c 100%);
+      border: 16px solid #2e1a0f; /* Borde de madera */
+      border-radius: 4rem; /* Bordes bien redondeados simulando la mesa */
+      box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 60px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1rem;
+      position: relative;
     }
 
-    /* TIPOGRAFÍA DEL TÍTULO */
-    .titulo-casino {
+    /* ZONAS DE JUEGO (Alturas fijas para que NADA se mueva) */
+    .zona-jugador, .zona-croupier {
+      height: 240px; /* Altura estricta para contener cartas sin empujar la UI */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* TEXTO IMPRESO EN EL PAÑO (Reemplaza al "📌 Tus cartas") */
+    .texto-tapete {
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 4px;
+      font-size: 0.9rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* MARCADORES DE PUNTOS */
+    .puntos-badge {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: #f9d976;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 1.1rem;
+    }
+
+    /* CONTENEDOR INVISIBLE PARA LAS CARTAS (Directo en la mesa) */
+    .cartas-container {
+      width: 100%;
+      height: 150px; /* Altura aproximada de una carta */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: nowrap; /* Evita que las cartas salten de línea */
+    }
+
+    /* ZONA CENTRAL (Botones, Logo y Resultado) */
+    .zona-central {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* LOGO CENTRAL EN EL PAÑO */
+    .logo-mesa {
       font-family: 'Playfair Display', serif;
-      color: #d4af37 !important;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
-      letter-spacing: 1px;
+      font-size: 3rem;
+      color: rgba(0, 0, 0, 0.2);
+      font-weight: 700;
+      letter-spacing: 5px;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none; /* Para no interferir con clicks */
     }
 
-    /* BOTONES: Efecto táctil (3D) estilo fichas de casino */
+    /* CONTENEDOR DE BOTONES (Altura fija para no romper diseño al ocultar/mostrar) */
+    .controles-container {
+      height: 50px;
+      display: flex;
+      gap: 15px;
+      z-index: 2;
+    }
+
+    /* BOTONES ESTILO FICHA */
     .btn-casino {
       border-radius: 50px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding: 0.8rem 2rem;
+      padding: 0.6rem 2rem;
+      border: none;
       transition: all 0.1s ease;
-      position: relative;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.5), 0 10px 15px rgba(0,0,0,0.4);
     }
-
-    /* Botón Primario (Dorado) */
-    .btn-casino-primary {
-      background: linear-gradient(180deg, #f9d976 0%, #e5b22b 100%);
-      color: #1a1a1a;
-      border: none;
-      box-shadow: 0 6px 0 #a67c00, 0 10px 15px rgba(0,0,0,0.4);
-    }
-    .btn-casino-primary:active {
-      transform: translateY(6px); /* Efecto de presionar */
-      box-shadow: 0 0 0 #a67c00, 0 2px 5px rgba(0,0,0,0.4);
-    }
-    .btn-casino-primary:hover {
-      filter: brightness(1.1);
-    }
-
-    /* Botón Secundario (Rojo) */
-    .btn-casino-secondary {
-      background: linear-gradient(180deg, #d32f2f 0%, #9a0007 100%);
-      color: #ffffff;
-      border: none;
-      box-shadow: 0 6px 0 #600000, 0 10px 15px rgba(0,0,0,0.4);
-    }
-    .btn-casino-secondary:active {
+    .btn-casino:active {
       transform: translateY(6px);
-      box-shadow: 0 0 0 #600000, 0 2px 5px rgba(0,0,0,0.4);
+      box-shadow: 0 0 0 rgba(0,0,0,0.5), 0 2px 5px rgba(0,0,0,0.4);
     }
-    .btn-casino-secondary:hover {
-      filter: brightness(1.2);
-      color: #ffffff;
+    .btn-primary-casino { background: linear-gradient(180deg, #f9d976, #e5b22b); color: #1a1a1a; box-shadow: 0 6px 0 #a67c00; }
+    .btn-primary-casino:active { box-shadow: 0 0 0 #a67c00; }
+    .btn-danger-casino { background: linear-gradient(180deg, #d32f2f, #9a0007); color: white; box-shadow: 0 6px 0 #600000; }
+    .btn-danger-casino:active { box-shadow: 0 0 0 #600000; }
+
+    /* CONTENEDOR DEL RESULTADO (Altura fija) */
+    .resultado-container {
+      height: 60px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
     }
 
-    /* CONTENEDORES: Efecto hundido (inset) en la mesa */
-    .cartas-container {
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      min-height: 140px;
-      box-shadow: inset 0 8px 20px rgba(0,0,0,0.8);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    /* BADGES DE PUNTUACIÓN */
-    .badge-puntos {
-      font-size: 1.1rem;
-      font-weight: 600;
-      background: linear-gradient(145deg, #1c2616, #0e140a);
-      padding: 0.5rem 1.5rem;
-      border-radius: 50px;
-      border: 1px solid rgba(212, 175, 55, 0.4);
-      color: #f8e6c3;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .badge-puntos strong {
-      color: #f9d976 !important;
-      text-shadow: 0 0 8px rgba(249, 217, 118, 0.3);
-    }
-
-    /* RESULTADO: Efecto neón/glow suave */
+    /* RESULTADO (Sobrescribe las clases de Bootstrap para que no tenga padding brusco) */
     #resultado {
-      background: rgba(212, 175, 55, 0.1) !important;
-      border: 1px solid rgba(212, 175, 55, 0.4) !important;
+      background: transparent !important;
+      border: none !important;
       color: #f9d976 !important;
-      border-radius: 1rem;
+      font-size: 1.3rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
-      backdrop-filter: blur(5px);
+      text-shadow: 0 0 10px rgba(249, 217, 118, 0.4);
+      margin: 0 !important;
+      padding: 0 !important;
     }
 
-    /* FOOTER */
-    .footer-casino {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 2rem;
+    /* FOOTER AFUERA DE LA MESA */
+    .footer-exterior {
+      height: 5vh;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 0.8rem;
+      color: #666;
     }
-    .footer-casino a {
-      text-decoration: none;
-      color: #a0a0a0;
-      transition: all 0.3s ease;
-    }
-    .footer-casino a:hover {
-      color: #d4af37 !important;
-      text-shadow: 0 0 10px rgba(212,175,55,0.6);
-    }
+    .footer-exterior a { color: #888; text-decoration: none; transition: 0.3s; }
+    .footer-exterior a:hover { color: #d4af37; }
   </style>
 </head>
-<body class="d-flex align-items-center justify-content-center min-vh-100 p-3">
-  <div class="container py-4">
-    <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-10 col-12">
-        
-        <div class="mesa-card p-4 p-md-5">
-          
-          <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom border-warning border-opacity-25 pb-4 mb-4">
-            <h1 class="display-5 fw-bold titulo-casino mb-0">♠️ BlackJack</h1>
-            <span class="badge bg-black text-warning px-4 py-2 rounded-pill border border-warning border-opacity-25 shadow">
-              21 · vs Croupier
-            </span>
-          </div>
-          
-          <div class="d-flex flex-wrap gap-3 justify-content-center mb-5">
-            <button id="btn-iniciar" class="btn btn-casino btn-casino-primary">🃟 Iniciar partida</button>
-            <button id="btn-pedir" class="btn btn-casino btn-casino-primary" style="display:none;">🃟 Pedir carta</button>
-            <button id="btn-plantarse" class="btn btn-casino btn-casino-secondary" style="display:none;">✋ Plantarse</button>
-          </div>
-          
-          <div class="mb-4">
-            <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
-              <h4 class="text-light mb-0"><span class="bg-dark bg-opacity-50 px-3 py-2 rounded-pill border border-secondary border-opacity-25">📌 Tus cartas</span></h4>
-              <span class="badge-puntos">🎯 Puntuación: <strong id="puntuacion-jugador" class="fs-5 ms-1">0</strong></span>
-            </div>
-            <div id="cartas-jugador" class="cartas-container d-flex flex-wrap gap-3"></div>
-          </div>
-          
-          <div class="mb-4">
-            <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
-              <h4 class="text-light mb-0"><span class="bg-dark bg-opacity-50 px-3 py-2 rounded-pill border border-secondary border-opacity-25">🎩 Croupier</span></h4>
-              <span class="badge-puntos">📊 Puntuación: <strong id="puntuacion-croupier" class="fs-5 ms-1 text-info">0</strong></span>
-            </div>
-            <div id="cartas-croupier" class="cartas-container d-flex flex-wrap gap-3"></div>
-          </div>
-          
-          <div id="resultado" class="alert text-center fs-5 mt-4 mb-0 py-3" role="alert">
-            🎲 Esperando inicio de partida...
-          </div>
-          
-        </div>
-        
-        <div class="mt-5 text-center footer-casino">
-          <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 small fw-medium text-secondary">
-            <span>🎴 Blackjack clásico · 21 puntos</span>
-            <span>✍️ Desarrollado por <strong class="text-warning">Leandro Maselli @leoroan</strong></span>
-            <a href="https://github.com/leoroan" target="_blank" class="border-bottom border-secondary pb-1">
-              <i class="fab fa-github me-1"></i> github.com/leoroan
-            </a>
-            <span>🎨 2026 · código original @DeepSeek</span>
-            <span>🎨 2026 · estilo conceptual @Gemini</span>
-          </div>
-          <div class="mt-3 text-secondary opacity-50 small fst-italic">
-            "Estrategia, cálculo y un poco de suerte"
-          </div>
-        </div>
-        
+<body>
+
+  <div class="mesa-casino">
+    
+    <h1 class="logo-mesa">BLACKJACK 21</h1>
+
+    <div class="zona-croupier">
+      <div class="texto-tapete">
+        Croupier
+        <span class="puntos-badge" id="puntuacion-croupier">0</span>
       </div>
+      <div id="cartas-croupier" class="cartas-container"></div>
     </div>
+
+    <div class="zona-central">
+      
+      <div class="controles-container">
+        <button id="btn-iniciar" class="btn-casino btn-primary-casino">🃟 Iniciar</button>
+        <button id="btn-pedir" class="btn-casino btn-primary-casino" style="display:none;">Pedir Carta</button>
+        <button id="btn-plantarse" class="btn-casino btn-danger-casino" style="display:none;">✋ Plantarse</button>
+      </div>
+
+      <div class="resultado-container">
+        <div id="resultado" role="alert">
+          Esperando inicio de partida...
+        </div>
+      </div>
+
+    </div>
+
+    <div class="zona-jugador">
+      <div class="texto-tapete">
+        Jugador (Tú)
+        <span class="puntos-badge" id="puntuacion-jugador">0</span>
+      </div>
+      <div id="cartas-jugador" class="cartas-container"></div>
+    </div>
+
   </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-  
+
+  <div class="footer-exterior mt-3">
+    <span>💡 Ideado por <strong>Leandro Maselli</strong></span>
+    <span>✍️ Desarrollado por <strong>DeepSeek</strong></span>
+    <span>🖌️ Diseñado por <strong>Gemini</strong></span>
+    <span>|</span>
+    <a href="https://github.com/leoroan" target="_blank"><i class="fab fa-github"></i> github.com/leoroan</a>
+    <span>|</span>
+    <span>2026</span>
+  </div>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
   <script src="script.js"></script>
