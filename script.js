@@ -129,15 +129,15 @@ class BlackJack {
 
   obtenerResultado() {
     const puntuacionJugador = this.calcularPuntuacion(this.manoJugador);
-    
+
     if (puntuacionJugador > 21) {
       return 'jugador_pierde';
     }
-    
+
     if (!this.juegoTerminado) {
       return null;
     }
-    
+
     return this.jugarCroupier();
   }
 }
@@ -170,7 +170,7 @@ function mostrarCartas(mano, elemento, mostrarTodas = true) {
 
 function actualizarInterfaz() {
   mostrarCartas(juego.manoJugador, cartasJugador);
-  
+
   if (juego.juegoTerminado) {
     mostrarCartas(juego.manoCroupier, cartasCroupier);
     puntuacionCroupier.textContent = juego.calcularPuntuacion(juego.manoCroupier);
@@ -178,9 +178,9 @@ function actualizarInterfaz() {
     cartasCroupier.innerHTML = '<div class="carta">?</div><div class="carta">?</div>';
     puntuacionCroupier.textContent = '?';
   }
-  
+
   puntuacionJugador.textContent = juego.calcularPuntuacion(juego.manoJugador);
-  
+
   if (juego.manoJugador.length > 0) {
     btnPedir.style.display = juego.juegoTerminado ? 'none' : 'inline-block';
     btnPlantarse.style.display = juego.juegoTerminado ? 'none' : 'inline-block';
@@ -198,15 +198,31 @@ function mostrarResultado(resultadoJuego) {
     'croupier_pierde': '¡El croupier se pasó! ¡Ganaste 1 a 1!',
     'croupier_blackjack': '¡El croupier tiene BlackJack! ¡Perdiste!'
   };
-  
+
+  // 1. Limpiamos clases CSS anteriores
+  resultado.classList.remove('mensaje-ganar', 'mensaje-perder', 'mensaje-empate');
+
+  // 2. Asignamos la clase de neón correspondiente según tu lógica
+  if (['jugador_blackjack', 'jugador_gana', 'croupier_pierde'].includes(resultadoJuego)) {
+    resultado.classList.add('mensaje-ganar');
+  } else if (['jugador_pierde', 'croupier_gana', 'croupier_blackjack'].includes(resultadoJuego)) {
+    resultado.classList.add('mensaje-perder');
+  } else {
+    resultado.classList.add('mensaje-empate');
+  }
+
+  // 3. Mostramos el mensaje
   resultado.textContent = mensajes[resultadoJuego] || resultadoJuego;
-  resultado.style.backgroundColor = resultadoJuego.includes('jugador') ? '#e8f5e9' : '#ffebee';
 }
 
 btnIniciar.addEventListener('click', () => {
   juego.iniciarJuego();
   actualizarInterfaz();
-  resultado.textContent = '';
+  
+  // Reseteamos el mensaje visual al arrancar partida
+  resultado.textContent = '🎲 ¡Partida en curso!';
+  resultado.classList.remove('mensaje-ganar', 'mensaje-perder', 'mensaje-empate');
+  
   btnPedir.style.display = 'inline-block';
   btnPlantarse.style.display = 'inline-block';
 });
@@ -214,8 +230,9 @@ btnIniciar.addEventListener('click', () => {
 btnPedir.addEventListener('click', () => {
   const resultadoJuego = juego.pedirCartaJugador();
   actualizarInterfaz();
-  
+
   if (resultadoJuego === 'jugador_pierde') {
+    // mostrarResultado ahora maneja sola qué color ponerle
     mostrarResultado(resultadoJuego);
     btnPedir.style.display = 'none';
     btnPlantarse.style.display = 'none';
@@ -235,67 +252,67 @@ function ejecutarCasosDePrueba() {
   const resultados = [];
   let pruebasExitosas = 0;
   let pruebasFallidas = 0;
-  
+
   // Función helper para crear cartas específicas
   function crearCarta(valor, palo) {
     return { valor, palo };
   }
-  
+
   // Test 1: Jugador obtiene BlackJack y gana 3 a 2
   function test1() {
     const juegoTest = new BlackJack();
     juegoTest.manoJugador = [crearCarta('A', '♠'), crearCarta('K', '♥')];
     juegoTest.manoCroupier = [crearCarta('9', '♦'), crearCarta('7', '♣')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'jugador_blackjack';
   }
-  
+
   // Test 2: Ambos obtienen BlackJack (empate)
   function test2() {
     const juegoTest = new BlackJack();
     juegoTest.manoJugador = [crearCarta('A', '♠'), crearCarta('Q', '♥')];
     juegoTest.manoCroupier = [crearCarta('A', '♦'), crearCarta('J', '♣')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'empate_blackjack';
   }
-  
+
   // Test 3: Jugador se pasa de 21
   function test3() {
     const juegoTest = new BlackJack();
     juegoTest.manoJugador = [crearCarta('K', '♠'), crearCarta('Q', '♥'), crearCarta('5', '♦')];
     juegoTest.manoCroupier = [crearCarta('9', '♣'), crearCarta('7', '♠')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'jugador_pierde';
   }
-  
+
   // Test 4: Jugador se planta con 18, croupier se pasa de 21
   function test4() {
     const juegoTest = new BlackJack();
     juegoTest.manoJugador = [crearCarta('K', '♠'), crearCarta('8', '♥')];
     juegoTest.manoCroupier = [crearCarta('K', '♦'), crearCarta('6', '♣'), crearCarta('7', '♠')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'croupier_pierde';
   }
-  
+
   // Test 5: Jugador 18, Croupier 20
   function test5() {
     const juegoTest = new BlackJack();
     juegoTest.manoJugador = [crearCarta('K', '♠'), crearCarta('8', '♥')];
     juegoTest.manoCroupier = [crearCarta('K', '♦'), crearCarta('Q', '♣')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'croupier_gana';
   }
-  
+
   // Test 6: BlackJack con racha de 7 victorias
   function test6() {
     const juegoTest = new BlackJack();
@@ -303,33 +320,33 @@ function ejecutarCasosDePrueba() {
     juegoTest.manoJugador = [crearCarta('A', '♠'), crearCarta('K', '♥')];
     juegoTest.manoCroupier = [crearCarta('9', '♦'), crearCarta('7', '♣')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'jugador_blackjack' && juegoTest.victoriasConsecutivas === 7;
   }
-  
+
   // Test 7: Jugador se pasa de 21 con múltiples cartas
   function test7() {
     const juegoTest = new BlackJack();
     juegoTest.manoJugador = [crearCarta('5', '♠'), crearCarta('6', '♥'), crearCarta('Q', '♦'), crearCarta('3', '♣')];
     juegoTest.manoCroupier = [crearCarta('9', '♠'), crearCarta('7', '♥')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'jugador_pierde';
   }
-  
+
   // Test 8: Croupier se pasa de 21
   function test8() {
     const juegoTest = new BlackJack();
     juegoTest.manoJugador = [crearCarta('K', '♠'), crearCarta('6', '♥')];
     juegoTest.manoCroupier = [crearCarta('K', '♦'), crearCarta('6', '♣'), crearCarta('8', '♠')];
     juegoTest.juegoTerminado = true;
-    
+
     const resultado = juegoTest.obtenerResultado();
     return resultado === 'croupier_pierde';
   }
-  
+
   const pruebas = [
     { nombre: 'Test 1: Jugador BlackJack, gana 3 a 2', funcion: test1 },
     { nombre: 'Test 2: Ambos BlackJack, empate', funcion: test2 },
@@ -340,7 +357,7 @@ function ejecutarCasosDePrueba() {
     { nombre: 'Test 7: Jugador se pasa con múltiples cartas', funcion: test7 },
     { nombre: 'Test 8: Croupier se pasa de 21', funcion: test8 }
   ];
-  
+
   for (let prueba of pruebas) {
     try {
       const resultado = prueba.funcion();
@@ -356,14 +373,18 @@ function ejecutarCasosDePrueba() {
       resultados.push({ nombre: prueba.nombre, exitoso: false, mensaje: `✗ Error: ${error.message}` });
     }
   }
-  
+
   mostrarResultadosPruebas(resultados, pruebasExitosas, pruebasFallidas);
 }
 
 function mostrarResultadosPruebas(resultados, exitosas, fallidas) {
   const divResultados = document.getElementById('resultados-pruebas');
-  divResultados.innerHTML = `<h3>Resultados de pruebas: ${exitosas}/${resultados.length} exitosas</h3>`;
   
+  // Verificamos si existe el div, por si no lo tenés en tu HTML actualmente
+  if (!divResultados) return; 
+
+  divResultados.innerHTML = `<h3>Resultados de pruebas: ${exitosas}/${resultados.length} exitosas</h3>`;
+
   for (let resultado of resultados) {
     const div = document.createElement('div');
     div.className = resultado.exitoso ? 'prueba-exitosa' : 'prueba-fallida';
@@ -372,4 +393,8 @@ function mostrarResultadosPruebas(resultados, exitosas, fallidas) {
   }
 }
 
-document.getElementById('btn-ejecutar-pruebas').addEventListener('click', ejecutarCasosDePrueba);
+// Validamos si existe el botón antes de agregarle el evento
+const btnEjecutarPruebas = document.getElementById('btn-ejecutar-pruebas');
+if (btnEjecutarPruebas) {
+  btnEjecutarPruebas.addEventListener('click', ejecutarCasosDePrueba);
+}
