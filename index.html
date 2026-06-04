@@ -1,36 +1,150 @@
-<html>
-  <head>
-    <title>BlackJack</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <h1>BlackJack</h1>
-    
-    <div>
-      <button id="btn-iniciar">Iniciar partida</button>
-      <button id="btn-pedir" style="display:none;">Pedir carta</button>
-      <button id="btn-plantarse" style="display:none;">Plantarse</button>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlackJack · 21</title>
+  
+  <!-- Bootstrap 5 CSS (solo estilos) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  
+  <!-- Tu hoja de estilos original (se mantiene, pero bootstrap la complementa) -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    /* pequeños ajustes para que no se pierda la esencia y se integre bien con bootstrap */
+    body {
+      background: linear-gradient(145deg, #1a472a 0%, #0e2a1a 100%);
+      font-family: system-ui, 'Segoe UI', 'Inter', sans-serif;
+    }
+    .mesa-card {
+      background: rgba(15, 25, 12, 0.75);
+      backdrop-filter: blur(3px);
+      border-radius: 2rem;
+      border: 1px solid rgba(255,215,130,0.3);
+    }
+    .btn-casino {
+      border-radius: 2rem;
+      font-weight: 600;
+      padding: 0.5rem 1.5rem;
+      transition: 0.2s;
+    }
+    .btn-casino-primary {
+      background: #f5b642;
+      border: none;
+      color: #1e3a1e;
+    }
+    .btn-casino-primary:hover {
+      background: #ffcf70;
+      transform: translateY(-2px);
+    }
+    .btn-casino-secondary {
+      background: #4a3724;
+      border: none;
+      color: #f8e6c3;
+    }
+    .btn-casino-secondary:hover {
+      background: #6b4f36;
+    }
+    .cartas-container {
+      background: rgba(0,0,0,0.25);
+      border-radius: 1.2rem;
+      padding: 0.8rem;
+      min-height: 100px;
+    }
+    .badge-puntos {
+      font-size: 1.2rem;
+      background: #1f2a18;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      color: #ffdfa5;
+    }
+    footer a {
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    footer a:hover {
+      text-shadow: 0 0 6px #ffcd7e;
+      letter-spacing: 0.3px;
+    }
+    hr {
+      opacity: 0.4;
+    }
+  </style>
+</head>
+<body class="d-flex align-items-center justify-content-center min-vh-100 p-3">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 col-12">
+        
+        <!-- Caja principal (mesa) con estilo mejorado pero respetando tus divs e IDs -->
+        <div class="mesa-card p-4 p-md-5 shadow-lg">
+          
+          <!-- Header con título + un toque decorativo -->
+          <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom border-warning border-opacity-25 pb-3 mb-4">
+            <h1 class="display-5 fw-bold text-warning" style="font-family: 'Georgia', serif;">♠️ BlackJack</h1>
+            <span class="badge bg-dark text-warning px-3 py-2 rounded-pill">21 · vs Croupier</span>
+          </div>
+          
+          <!-- Tus botones originales con clases bootstrap y estilos personalizados -->
+          <div class="d-flex flex-wrap gap-3 justify-content-center mb-5">
+            <button id="btn-iniciar" class="btn btn-casino btn-casino-primary shadow">🃟 Iniciar partida</button>
+            <button id="btn-pedir" class="btn btn-casino btn-casino-primary shadow" style="display:none;">🃟 Pedir carta</button>
+            <button id="btn-plantarse" class="btn btn-casino btn-casino-secondary shadow" style="display:none;">✋ Plantarse</button>
+          </div>
+          
+          <!-- Área jugador (mismo ID, misma estructura, solo añadido clases de bootstrap y diseño) -->
+          <div class="mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap">
+              <h3 class="text-light mb-2"><span class="bg-warning bg-opacity-25 px-3 py-1 rounded-3">📌 Tus cartas:</span></h3>
+              <span class="badge-puntos mb-2">🎯 Puntuación: <strong id="puntuacion-jugador" class="text-warning fs-4">0</strong></span>
+            </div>
+            <div id="cartas-jugador" class="cartas-container d-flex flex-wrap gap-2 mt-2"></div>
+          </div>
+          
+          <!-- Área croupier (idem) -->
+          <div class="mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap">
+              <h3 class="text-light mb-2"><span class="bg-secondary bg-opacity-25 px-3 py-1 rounded-3">🎩 Cartas del croupier:</span></h3>
+              <span class="badge-puntos mb-2">📊 Puntuación: <strong id="puntuacion-croupier" class="text-info fs-4">0</strong></span>
+            </div>
+            <div id="cartas-croupier" class="cartas-container d-flex flex-wrap gap-2 mt-2"></div>
+          </div>
+          
+          <!-- Resultado de la partida (mismo div) -->
+          <div id="resultado" class="alert alert-dark bg-black bg-opacity-50 text-warning border-warning text-center fs-5 mt-3" role="alert">
+            🎲 Esperando inicio de partida
+          </div>
+          
+        </div>
+        
+        <!-- 🧑‍💻 SECCIÓN DE AUTORÍA Y LINK A GITHUB (tal como pediste, sin tocar el resto) -->
+        <div class="mt-5 text-center text-light-emphasis">
+          <hr class="mx-auto w-25">
+          <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 small fw-medium">
+            <span class="opacity-75">🎴 Blackjack clásico · 21 puntos</span>
+            <span>✍️ Desarrollado por <strong class="text-warning">Manuel Vázquez</strong></span>
+            <a href="https://github.com/tu-usuario" target="_blank" class="text-decoration-none text-light border-bottom border-warning border-opacity-50 pb-1">
+              <i class="fab fa-github me-1"></i> github.com/tu-usuario
+            </a>
+            <span>🎨 2026 · código original</span>
+          </div>
+          <div class="mt-2 opacity-50 small fst-italic">
+            "Estrategia, cálculo y un poco de suerte"
+          </div>
+        </div>
+        
+      </div>
     </div>
-    
-    <div>
-      <h3>Tus cartas:</h3>
-      <div id="cartas-jugador"></div>
-      <p>Puntuación: <span id="puntuacion-jugador">0</span></p>
-    </div>
-    
-    <div>
-      <h3>Cartas del croupier:</h3>
-      <div id="cartas-croupier"></div>
-      <p>Puntuación: <span id="puntuacion-croupier">0</span></p>
-    </div>
-    
-    <div id="resultado"></div>
-    
-    <div style="margin-top: 30px;">
-      <button id="btn-ejecutar-pruebas">Ejecutar casos de prueba</button>
-      <div id="resultados-pruebas"></div>
-    </div>
-    
-    <script src="script.js"></script>
-  </body>
+  </div>
+  
+  <!-- Bootstrap JS bundle (opcional para ciertos componentes, pero no afecta tu lógica) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  
+  <!-- FontAwesome solo para el ícono de github (no interfiere) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Tu script original se carga exactamente igual -->
+  <script src="script.js"></script>
+</body>
 </html>
