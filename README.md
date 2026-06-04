@@ -74,7 +74,7 @@ Este repositorio contiene una implementación funcional y **completa** del juego
 ## 🧑‍💻 Autoría y contacto
 
 Ideado por **Leandro Maselli _@leoroan_** y Desarrollado por **& _@deepseek🐋_**  
-🔗 GitHub: [github.com/tu-usuario](https://github.com/leoroan)
+🔗 GitHub: [github.com/leoroan](https://github.com/leoroan)
 🔗 Deepseek: [https://chat.deepseek.com/](https://chat.deepseek.com/)
  
 - 💬 Comentarios o sugerencias → bienvenidos via Issues
