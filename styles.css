@@ -1,0 +1,88 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#cartas-jugador {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  min-height: 50px;
+}
+
+#cartas-croupier {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  min-height: 50px;
+}
+
+#resultado {
+  margin-top: 20px;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.carta {
+  display: inline-block;
+  padding: 10px;
+  margin: 5px;
+  background-color: white;
+  border: 2px solid #333;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 40px;
+  text-align: center;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.carta-roja {
+  color: red;
+}
+
+.carta-negra {
+  color: black;
+}
+
+.prueba-exitosa {
+  color: green;
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #e8f5e9;
+  border-radius: 3px;
+}
+
+.prueba-fallida {
+  color: red;
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #ffebee;
+  border-radius: 3px;
+}
