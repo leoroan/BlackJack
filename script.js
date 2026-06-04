@@ -193,7 +193,7 @@ function mostrarResultado(resultadoJuego) {
     'empate_blackjack': '¡Ambos tienen BlackJack! ¡Empate!',
     'jugador_pierde': '¡Te pasaste de 21! ¡Perdiste!',
     'jugador_gana': '¡Ganaste 1 a 1!',
-    'croupier_gana': '¡El croupier gana!',
+    'croupier_gana': '¡Perdiste!, el croupier gana!',
     'empate': '¡Empate!',
     'croupier_pierde': '¡El croupier se pasó! ¡Ganaste 1 a 1!',
     'croupier_blackjack': '¡El croupier tiene BlackJack! ¡Perdiste!'
