@@ -1,76 +1,252 @@
+/* =========================================================
+   1. FUENTES Y RESET DE PANTALLA
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
 body {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #0f0f0f;
+  font-family: 'Montserrat', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
+/* =========================================================
+   2. LA MESA DE CASINO
+========================================================= */
+.mesa-casino {
+  width: 96vw;
+  max-width: 1400px;
+  height: 88vh;
+  background: radial-gradient(circle at center, #1b6b3b 0%, #0a361c 100%);
+  border: 16px solid #2e1a0f;
+  border-radius: 4rem;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 60px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 1rem;
+  position: relative;
 }
 
-button:hover {
-  background-color: #45a049;
+.logo-mesa {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+  letter-spacing: 5px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
+/* Zonas de juego con altura fija para evitar que salte el diseño */
+.zona-jugador, .zona-croupier {
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-#cartas-jugador {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  min-height: 50px;
+.zona-central {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
 
-#cartas-croupier {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  min-height: 50px;
+/* =========================================================
+   3. TEXTOS Y MARCADORES (Reemplaza a los fondos grises)
+========================================================= */
+.texto-tapete {
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-#resultado {
-  margin-top: 20px;
-  padding: 15px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 5px;
+.puntos-badge {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #f9d976;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 1.1rem;
 }
 
+/* =========================================================
+   4. CONTENEDORES DE CARTAS (Pisando tu CSS viejo)
+========================================================= */
+#cartas-jugador, #cartas-croupier {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  background-color: transparent; /* Quita tu fondo gris */
+  margin-top: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   5. DISEÑO DE LAS CARTAS (Lo que inyecta tu JS)
+========================================================= */
 .carta {
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 65px;  /* Ajustado para parecer una carta real */
+  height: 100px;
   padding: 10px;
-  margin: 5px;
+  margin: 0; /* Margen removido, usamos gap en el contenedor */
   background-color: white;
-  border: 2px solid #333;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 26px; /* Letra más grande para los palos */
   font-weight: bold;
-  width: 40px;
-  text-align: center;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.5);
+  animation: repartir 0.3s ease-out; /* Pequeño efecto al aparecer */
+}
+
+@keyframes repartir {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .carta-roja {
-  color: red;
+  color: #d32f2f;
 }
 
 .carta-negra {
-  color: black;
+  color: #1a1a1a;
 }
 
+/* =========================================================
+   6. BOTONES (Reemplaza tus botones verdes)
+========================================================= */
+.controles-container {
+  height: 50px;
+  display: flex;
+  gap: 15px;
+  z-index: 2;
+}
+
+button {
+  margin: 0;
+  padding: 0.6rem 2rem;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: none;
+  border-radius: 50px;
+  transition: all 0.1s ease;
+  
+  /* Estilo Ficha Dorada por defecto */
+  background: linear-gradient(180deg, #f9d976, #e5b22b);
+  color: #1a1a1a;
+  box-shadow: 0 6px 0 #a67c00, 0 10px 15px rgba(0,0,0,0.4);
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
+
+button:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #a67c00, 0 2px 5px rgba(0,0,0,0.4);
+}
+
+button:disabled {
+  background: #555;
+  color: #999;
+  box-shadow: 0 6px 0 #333;
+  cursor: not-allowed;
+  transform: translateY(6px);
+}
+
+/* Botón Plantarse (Ficha Roja) */
+#btn-plantarse {
+  background: linear-gradient(180deg, #d32f2f, #9a0007);
+  color: white;
+  box-shadow: 0 6px 0 #600000, 0 10px 15px rgba(0,0,0,0.4);
+}
+#btn-plantarse:active {
+  box-shadow: 0 0 0 #600000, 0 2px 5px rgba(0,0,0,0.4);
+}
+#btn-plantarse:disabled {
+  background: #555;
+  box-shadow: 0 6px 0 #333;
+}
+
+/* =========================================================
+   7. RESULTADO DE LA PARTIDA
+========================================================= */
+.resultado-container {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+#resultado {
+  margin: 0;
+  padding: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #f9d976;
+  text-shadow: 0 0 10px rgba(249, 217, 118, 0.4);
+  background: transparent;
+  border: none;
+}
+
+/* =========================================================
+   8. FOOTER
+========================================================= */
+.footer-exterior {
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.footer-exterior a {
+  color: #888;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.footer-exterior a:hover {
+  color: #d4af37;
+}
+
+/* =========================================================
+   9. CLASES DE PRUEBA (De tu código original, intactas)
+========================================================= */
 .prueba-exitosa {
   color: green;
   margin: 5px 0;
