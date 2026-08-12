@@ -9,6 +9,14 @@
 
 ---
 
+<p align="center">
+  <a href="http://myselfproductions.me/BlackJack/" target="_blank" rel="noopener noreferrer">
+    <strong>🎮 Vení a probar mi BlackJack 21</strong>
+  </a>
+</p>
+
+___
+
 ## 🎯 Propósito del proyecto
 
 Este repositorio contiene una implementación funcional y **completa** del juego Blackjack (21), desarrollada específicamente para servir como **objeto de pruebas automatizadas**.
